@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  
+  <title>VIBE IOT Platform</title>
+  
+
+  <link rel="shortcut icon" href="./img/favicon.ico">
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="./css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="./css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="./css/highlight.css">
+
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "None";
+    var mkdocs_page_input_path = "index.md";
+    var mkdocs_page_url = "/";
+  </script>
+  
+  <script src="./js/jquery-2.1.1.min.js"></script>
+  <script src="./js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="./js/highlight.pack.js"></script>
+  <script src="./js/theme.js"></script> 
+
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href="." class="icon icon-home"> VIBE IOT Platform</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        <ul class="current">
+          
+            <li>
+    <li class="toctree-l1 current">
+        <a class="current" href=".">Home</a>
+        
+            <ul>
+            
+                <li class="toctree-l3"><a href="#sw-startup-guide-for-vibe">SW startup guide for VIBE</a></li>
+                
+                    <li><a class="toctree-l4" href="#overview">Overview</a></li>
+                
+                    <li><a class="toctree-l4" href="#hardware-configurations">Hardware Configurations</a></li>
+                
+                    <li><a class="toctree-l4" href="#beaglebone-black-section">Beaglebone Black section</a></li>
+                
+                    <li><a class="toctree-l4" href="#radio-section">Radio section</a></li>
+                
+                    <li><a class="toctree-l4" href="#gps-section">GPS section</a></li>
+                
+                    <li><a class="toctree-l4" href="#getting-started">Getting started</a></li>
+                
+                    <li><a class="toctree-l4" href="#understanding-the-ports-for-2g-modem-on-vibe-2g">Understanding the ports for 2G Modem on VIBE-2G</a></li>
+                
+                    <li><a class="toctree-l4" href="#understanding-the-ports-for-3g-modem-on-vibe-3g">Understanding the ports for 3G Modem on VIBE-3G</a></li>
+                
+                    <li><a class="toctree-l4" href="#at-commands-manual">AT Commands Manual</a></li>
+                
+            
+            </ul>
+        
+    </li>
+<li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href=".">VIBE IOT Platform</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Home</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="sw-startup-guide-for-vibe">SW startup guide for VIBE</h1>
+<p>VIBE IoT platform is a unique combination of community famous Beaglebone Black with industry standard modem connectivity for WAN. Below, we describe how to set up VIBE and the associated software. </p>
+<h2 id="overview">Overview</h2>
+<p>VIBE is shipped with its onboard 4GB eMMC flashed with latest Debian Wheezy console image with kernel 3.8.13-bone70. This pre-flashed image is preconfigured with all the settings and with the kernel patches to use all the features on VIBE namely 3G/2G modem, Two USB host port, RTC, GPS(if present), Ethernet Reset over GPIO.</p>
+<p>A prebuilt SD Card image(3.65GB) is also available for download as 
+<a href="https://www.dropbox.com/s/dr8y9ei3l6hqg1n/Yantrr_VIBE_3.8.13bone70.img.xz?dl=0">VIBE Debian Wheezy SD card image</a></p>
+<p>Following kernel patches/software configurations are included in the VIBE images :</p>
+<ol>
+<li>RTC enabled in kernel</li>
+<li>USB0 OTG behaviour changed from client to host</li>
+<li>HDMI audio disabled to use Ethernet PHY reset over GPIO</li>
+<li>Device tree overlay file to use 1PPS from GPS module at a GPIO</li>
+<li>USB drivers for 3G modem included in kernel</li>
+<li>Device tree overlay files for UART1 and UART4</li>
+</ol>
+<h2 id="hardware-configurations">Hardware Configurations</h2>
+<p>VIBE stands for VAYU Integrated Beaglebone Black. It operates similar to the Beaglebone black with VAYU M2M cape integrated on to it in a single board.</p>
+<p>Following images give a proper understanding of the VIBE : </p>
+<p><img alt="VIBE_topside" src="./img/VIBE_topside.JPG" /></p>
+<p><img alt="VIBE_bottomside" src="./img/VIBE_bottomside.JPG" /></p>
+<h2 id="beaglebone-black-section">Beaglebone Black section</h2>
+<ul>
+<li>
+<p><strong>Processor :</strong> VIBE uses TI's Sitara ARM cortex-A8 AM3352 1 Ghz processor(AM3352BZCZ100) which is different from 1GHz AM3358(AM3358BZCZ100) used in original Beaglebone Black. The differences between the two being AM3352 does not have PRU subsystem, EtherCAT and SGX Graphics support.</p>
+</li>
+<li>
+<p><strong>USB host ports :</strong> VIBE contains two USB 2.0 HS host ports with type A connector whereas original Beaglebone black has only one. VIBE has reconfigured USB0 OTG port as self powered USB hub host ports. So there is no USB client port. USB1 OTG port remains configured as USB 2.0 Host port and used for interface with 3G modem.</p>
+</li>
+<li>
+<p><strong>Battery :</strong> VIBE can be powered up by 3.7V Li-ion rechargeable battery with automatic backup switch over circuit from 5V DC input and can power up the whole VIBE including 3G/2G modem, both the USB Host ports and HDMI. Original Beaglebone black also supports 3.7V Li-ion Rechargeable battery but with limited functionality of USB host port and HDMI unavailable.</p>
+</li>
+<li>
+<p><strong>Ethernet reset :</strong> VIBE includes a standalone ethernet reset circuit over GPIO . This addresses a bug in the original beaglebone black where the Ethernet PHY is not detected at bootup and board had to be reset (http://bugs.elinux.org/issues/67).</p>
+</li>
+<li>In VIBE, the ethernet phy can be individually reset separate from the whole board by toggling gpio GPIO3_21(GPIO 117).</li>
+<li>
+<p>To use the GPIO ethernet reset feature, HDMI audio has to be disabled in device tree and then GPIO1_27(GPIO 59) has to be pulled low so that GPIO3_21 is available for use. Also, HDMI is an optional feature on VIBE.</p>
+</li>
+<li>
+<p><strong>Watchdog Timer :</strong> VIBE includes a watchdog timer circuit which can generate an external reset to PMIC and address the Under Voltage Lockout(UVLO) issue faced in Original Beaglebone Black. If the PMIC TPS65217C enters in UVLO and is not resolved within 10s, watchdog timer will generate an external reset to PMIC.</p>
+</li>
+<li>
+<p><strong>Real Time Clock :</strong> VIBE has an accurate Real Time clock with an integrated temperature compensated oscillator and crystal for time keeping operations.</p>
+</li>
+<li>It includes a 3V non-chargeable coin cell ( CR1025/CR1216/CR1220) for standby power.</li>
+<li>RTC (DS3231) is interfaced over I2C2 to AM3352 processor. Its registers can be read to indirectly serve as Temperature sensor too.</li>
+<li>
+<p>RTC IC generates a 1Hz Square wave signal. This signal is available(optionally) on a uFL connector and GPIO27 when GPS module is not present.</p>
+</li>
+<li>
+<p><strong>Extra UART0</strong> header at the edge of the board for easy handling and convenience.</p>
+</li>
+<li>
+<p>Fully compatible Beaglebone Black expansion header. Most of the LCD capes are compatible with VIBE.</p>
+</li>
+</ul>
+<h2 id="radio-section">Radio section</h2>
+<p>VIBE has an option between 2G/GPRS modem and 3G/HSPA (3G/CDMA) modem for WAN connectivity.</p>
+<ul>
+<li><strong>2G modem :</strong> The 2G modem is interfaced via UART to UART1 port of the AM3352 processor on VIBE. There are following versions for different regions :</li>
+</ul>
+<p><em>Quad-Band(2G-Q) :</em> For Global connectivity covering bands GSM 850/EGSM 900/DCS 1800/PCS 1900 with data rates of 85.6kbps DL/42.8kbps UL.</p>
+<p><em>Dual-Band(2G-D) :</em> For Asia/Europe connectivity covering bands EGSM 900/DCS 1800 with data rates of 85.6kbps DL/42.8kbps UL.</p>
+<ul>
+<li><strong>3G modem :</strong> The 3G modem is interfaced via USB2.0 HS on USB1 Host port of AM3352 processor on VIBE. </li>
+</ul>
+<p>There are following versions for different regions in both GSM/HSPA and CDMA/EVDO :</p>
+<p><em>3G HSPA-A (3GH-A) :</em> For Asia/Europe connectivity covering bands WCDMA 2100 and GSM 850/EGSM 900/DCS 1800/PCS 1900 with data rates of 7.2Mbps DL/5.76Mbps UL.</p>
+<p><em>3G HSPA-B (3GH-B) :</em> For Americas connectivity covering bands WCDMA 2100/850 and GSM 850/EGSM 900/DCS 1800/PCS 1900 with data rates of 7.2Mbps DL/5.76Mbps UL.</p>
+<p><em>3G HSPA-C (3GH-C) :</em> For Asia/Europe/Australia Connectivity covering bands WCDMA 2100/900 and GSM 850/EGSM 900/DCS 1800/PCS 1900 with data rates of 7.2Mbps DL/5.76Mbps UL.</p>
+<p><em>3G HSPA-D (3GH-D) :</em> For Global connectivity covering bands WCDMA 850/1900/2100 and GSM 850/EGSM 900/DCS 1800/PCS 1900 with data rates of 3.6Mbps DL/384kbps UL.</p>
+<p><em>3G CDMA (3GC-A) :</em> For Global connectivity covering bands CDMA 800/1900 with data rates of 3.1Mbps DL/1.8Mbps UL.</p>
+<p>3GH-A/B/C and 3GC-A modems create ports /dev/ttyUSB0, /dev/ttyUSB1 and /dev/ttyUSB2 with ports assigned as :</p>
+<p>a. /dev/ttyUSB0 : Modem port and AT commands port</p>
+<p>b. /dev/ttyUSB2 : AT commands port</p>
+<p>3GH-D modem creats ports /dev/ttyUSB0, /dev/ttyUSB1, /dev/ttyUSB2, /dev/ttyUSB3 with ports assigned as :</p>
+<p>a. /dev/ttyUSB1 : AT commands port</p>
+<p>b. /dev/ttyUSB3 : Modem port and AT commands port</p>
+<p>Both 2G/3G modems have following control interfaces :</p>
+<p>a. <strong>Modem Hard reset</strong> over GPIO - GPIO44</p>
+<p>b. <strong>Modem Hard reset</strong> over push button switch - S5</p>
+<p>c. <strong>Modem On/Off</strong> over GPIO - GPIO45</p>
+<p>d. <strong>Modem On/Off</strong> over push button switch - S4</p>
+<p>e. <strong>Netlight/Signal LED</strong> - D15 (this feature is optional in 3GH-A/B/C and 3GC-A modules)</p>
+<p>f. <strong>3G Modem Antenna</strong> - On-module GSC connector</p>
+<p>g. <strong>2G Modem Antenna</strong> - uFL connector</p>
+<p>h. <strong>3G Modem Wakeup_out/ 2G/3G UART RI </strong>- GPIO26</p>
+<p>i. Modem Interface - 2G : UART1 (rx,tx) ; 3G : USB2.0 HS USB1 (and UART1 - optional)</p>
+<p>j. <strong>SIM/RUIM card</strong> - 6 pin Push-pull mini-sim card connector</p>
+<p>k. Audio - 3.5mm TRRS Analog stereo audio and mic jack(optional)</p>
+<p>Additional interfaces for 2G modem only :</p>
+<p>l. UART RTS : I2C1_SCL(UART1_RTS)</p>
+<p>m. UART CTS : I2C1_SDA(UART1_CTS)</p>
+<p>n. UART DTR : GPIO61</p>
+<p>o. UART DCD : GPIO65</p>
+<p>p. 2G Modem Status GPIO : GPIO47</p>
+<p>q. 2G Modem Status LED : D14</p>
+<p>r. 2G Debug UART : on Extra UART0 header</p>
+<ul>
+<li>Default values of GPIO44 and GPIO45 is high.</li>
+<li>USB drivers for the modem (21f5:2012, 21f5:2009, 19d2:ffeb, 19d2:fffe) should be included in the kernel. We provide pre-compiled images with USB drivers included in the kernel.</li>
+</ul>
+<h2 id="gps-section">GPS section</h2>
+<p>VIBE provides GPS module as an add-on feature to 3G/2G modem and/or as a standalone feature.</p>
+<p>GPS module is interfaced on VIBE over UART at UART4 port. NMEA-0183 messages from the GPS modules can be accessed at /dev/ttyO4 port at baud rate of 19200.</p>
+<p>Following are the hardware interfaces of GPS module on VIBE :</p>
+<ol>
+<li>Module Interface : UART4(rx,tx) 19200 raw</li>
+<li>Module Reset over GPIO : GPIO46</li>
+<li>Module Reset over push button : S6</li>
+<li>1 PPS output over GPIO : GPIO27</li>
+<li>1 PPS output over uFL connector : P14</li>
+<li>GPS Fix Led : D16</li>
+<li>GPS module Power Led (3.3V) : D17</li>
+<li>GPS Antenna : uFL connector P13</li>
+<li>Battery backup for Hot start : 3V coin cell
+<br>
+<br>
+<strong> GPIO46 should be set to high as Default state for the GPS module to function</strong></li>
+</ol>
+<p><strong> Keep the GPS antenna under open sky for better operations and depending on whether GPS module had a cold, warm or hot start, GPS fix LED will soon start blinking at 1Hz.</strong></p>
+<h2 id="getting-started">Getting started</h2>
+<p><span style="color:black;font-size:1.5em;">Setting up the system</span></p>
+<ul>
+<li>Place 3V coin cell(supplied with VIBE) in the holder for RTC and/or Navika hot start feature.</li>
+<li>Place a data enabled mini-SIM in the SIM card slot and connect a GSM antenna to the respective 2G/3G antenna connector.</li>
+<li>Ensure that the power jumpers J2 and J3(ignore if battery feature present) on VIBE are in place and eeprom address set at 0x54 using dip switch S7</li>
+<li>Power up VIBE using the 5V,5A DC adapter(supplied with VIBE).</li>
+<li>After powering up and bootup, ssh into VIBE by any of the following option  :</li>
+</ul>
+<p>a. Through 3.3V UART to USB cable at either of UART0 headers.</p>
+<p>b. Through Ethernet Cable (at IP 192.168.1.150 for preflashed eMMC images)</p>
+<p>c. Through HDMI monitor and USB keyboard (when HDMI feature present)</p>
+<p><strong>Username for root login is root and password is root. For user login, username is debian and password is temppwd.</strong></p>
+<p><strong>a. Through 3.3V UART to USB cable</strong></p>
+<p>This gives debug-console access to VIBE. Once login prompt comes, use the above provided username and password to login. These cables are available as an accessory on Yantrr
+<a href="http://www.yantrr.com/products/accessories?product_id=88">(USB UART adapter with jumper wires)</a>
+ and further options are also listed here.</p>
+<p>Download link for Windows drivers for the adapter - 
+<a href="https://www.dropbox.com/s/dyrcycd5b483y27/PL2303_Prolific_DriverInstaller_v1_9_0.zip?dl=0">click here</a></p>
+<p><strong>b. Through Ethernet cable</strong></p>
+<p>Pre-flashed image on the emmc has the fixed IP address as 192.168.1.150 with gateway 192.168.1.1 SSH into VIBE over ethernet :</p>
+<pre><code>    ssh -l root 192.168.1.150
+</code></pre>
+<p>For more help please 
+<a href="http://www.elinux.org/Beagleboard:Terminal_Shells">follow.</a></p>
+<p><strong>c. Through HDMI Display and USB Keyboard</strong></p>
+<p>This option is available for use in VIBE with HDMI option. Default VIBE comes without HDMI configuration.</p>
+<p>To ssh into VIBE using this method, a micro HDMI to HDMI cable (click here), a display with HDMI port and a USB Keyboard is needed. Setup the VIBE with the micro HDMI to HDMI cable, Display and USB keyboard before powering it up. Once VIBE starts booting, a login prompt comes within some time. Use the username and password as provided above to login.</p>
+<p>After logging into VIBE, we have to set some GPIOs and effect some configurations so that it can be used desirably. In pre-flashed image, all these settings are pre defined and configured once VIBE boots up successfully.</p>
+<p>The set of commands executed at bootup in pre-flashed image are in this file :</p>
+<pre><code>    cd ~
+    nano boot_run.sh
+</code></pre>
+<p>Basically after logging into the VIBE, GPIOs 44, 45 and 46 have to be set high as output.</p>
+<pre><code>    cd /sys/class/gpio/
+    echo 44 &gt; export
+    echo 45 &gt; export
+    echo 46 &gt; export
+    cd gpio44
+    echo “high” &gt; direction
+    cd ..
+    cd gpio45
+    echo “high” &gt; direction
+    cd ..
+    cd gpio46
+    echo "high" &gt; direction
+</code></pre>
+<p><code>NOTE :</code> In pre-flashed image, for ease of use of regular commands with the GPIOs, functions have been created: pinexp, setout, setin, pinread.</p>
+<pre><code>    pinexp 45          //export gpio45 to userspace
+    pinread 45         //read value of gpio45
+    setin 45           //set gpio45 in input mode
+    setout 45 high     //set gpio45 in output mode as high value
+    setout 45 low      //set gpio45 in output mode as low value
+</code></pre>
+<p><strong>Power On Modem</strong></p>
+<ul>
+<li>For 2GQ-A,2GP-A,3GH-A/B/C and 3GC-A types :</li>
+</ul>
+<p>Modem can be powered on by providing a low level pulse at ON/OFF Pin for 3-4s when the module is off. It can be achieved by either using the push button switch S4 or GPIO45.</p>
+<p>GPIO45 should always be in default High state.</p>
+<ul>
+<li>
+<p>3G Modems are configured to be turned on after bootup in pre-flashed image or sd card image provided by us. 2G modems need to be issued a Power-On cycle.</p>
+<pre><code>cd /sys/class/gpio/
+echo 45 &gt; export
+cd gpio45
+echo "high" &gt; direction
+sleep 4
+echo "low" &gt; direction
+sleep 4
+echo "high" &gt; direction
+</code></pre>
+</li>
+<li>
+<p>After some time, LED D15 should start blinking as to indicate modem has turned on (this feautre is optional in 3GH-A/B/C and 3GC-A modules).</p>
+</li>
+<li>
+<p>For 3GH-D type : </p>
+</li>
+</ul>
+<p>For complete instructions for 3GH-D type of modems 
+<a href="http://www.yantrr.com/wiki/ZTE_modem">please follow.</a></p>
+<p>Following sections are for 3G modem only (for 2G skip to next section) :</p>
+<p><strong>Once 3G Modem is properly turned on, check that modem is visible on the USB bus by issuing following command:</strong></p>
+<pre><code>    lsusb
+    Bus 001 Device 002: ID 0424:2412 Standard Microsystems Corp.
+    Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+    Bus 002 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+    Bus 001 Device 034: ID 21f5:2012 
+    Bus 001 Device 007: ID 046d:0825 Logitech, Inc. Webcam C270
+</code></pre>
+<p>*<em>System messages (logs) show what happened when 3G modem was turned on and its drivers were assigned</em>8</p>
+<pre><code>    dmesg | grep -i usb
+
+    usb 1-1.1: New USB device found, idVendor=21f5, idProduct=2012
+    usb 1-1.1: New USB device strings: Mfr=3, Product=2, SerialNumber=4
+    usb 1-1.1: Product: StrongRising Technologies
+    usb 1-1.1: Manufacturer: Modem
+    usb 1-1.1: SerialNumber: 000000000002
+    usb 1-1.1: usb_probe_device
+    usb 1-1.1: configuration #1 chosen from 1 choice
+    usb 1-1.1: adding 1-1.1:1.0 (config #1, interface 0)
+    usbserial_generic 1-1.1:1.0: usb_probe_interface
+    usbserial_generic 1-1.1:1.0: usb_probe_interface - got id
+    usbserial_generic 1-1.1:1.0: The "generic" usb-serial driver is only for testing and one-off prototypes.
+    usbserial_generic 1-1.1:1.0: Tell linux-usb@vger.kernel.org to add your device to a proper driver.
+    usbserial_generic 1-1.1:1.0: generic converter detected
+    usb 1-1.1: generic converter now attached to ttyUSB0
+    usb 1-1.1: adding 1-1.1:1.1 (config #1, interface 1)
+    usbserial_generic 1-1.1:1.1: usb_probe_interface
+    usbserial_generic 1-1.1:1.1: usb_probe_interface - got id
+    usbserial_generic 1-1.1:1.1: The "generic" usb-serial driver is only for testing and one-off prototypes.
+    usbserial_generic 1-1.1:1.1: Tell linux-usb@vger.kernel.org to add your device to a proper driver.
+    usbserial_generic 1-1.1:1.1: generic converter detected
+    usb 1-1.1: g'''eneric converter now attached to ttyUSB1'''
+    usb 1-1.1: adding 1-1.1:1.2 (config #1, interface 2)
+    usbserial_generic 1-1.1:1.2: usb_probe_interface
+    usbserial_generic 1-1.1:1.2: usb_probe_interface - got id
+    usbserial_generic 1-1.1:1.2: The "generic" usb-serial driver is only for testing and one-off prototypes.
+    usbserial_generic 1-1.1:1.2: Tell linux-usb@vger.kernel.org to add your device to a proper driver.
+    usbserial_generic 1-1.1:1.2: generic converter detected
+    usb 1-1.1: '''generic converter now attached to ttyUSB2'''
+</code></pre>
+<p>When usi<strong>ng Default debian image without USB drivers for 3G modem, issue following command:</strong></p>
+<pre><code>    modprobe usbserial vendor=0x21f5 product=0x2012
+</code></pre>
+<p><strong>It is recommended to add a proper driver for the modem in kernel. The generic driver is not reliable.</strong></p>
+<p><code>Note :</code> If the modem is not visible after the these steps, please cycle through the turn on-off procedure for the modem</p>
+<p><code>Note :</code> If the modem is not visible after these steps or any issues are faced while initializing the modem please contact Yantrr Support (support@yantrr.com) with the above log messages (dmesg | grep –I usb or /var/log/syslog).</p>
+<h2 id="understanding-the-ports-for-2g-modem-on-vibe-2g">Understanding the ports for 2G Modem on VIBE-2G</h2>
+<p>The 2G modem on VIBE-2G OR VIBE-2G-GPS/TIM board is interfaced via UART1.</p>
+<p>The 2G modem is accessible over the UART1 port, /dev/ttyO1.</p>
+<p>In default Debian images, UART1 port's device tree has to be loaded into the kernel using the following command :</p>
+<pre><code>    cd /lib/firmware
+    echo BB-UART1 &gt; /sys/devices/bone-capemgr.*/slots
+</code></pre>
+<p>All the AT Commands can be issued to the 2G modem on ttyO1 port with the baud rate of 115200, 8N1. The UART port of modem is available at one instant only, either it is establishing ppp connection or AT commands are executed on it.</p>
+<h2 id="understanding-the-ports-for-3g-modem-on-vibe-3g">Understanding the ports for 3G Modem on VIBE-3G</h2>
+<p>The 3G modem on VIBE-3G OR VIBE-3G-GPS/TIM board is interfaced via USB2.0 HS to USB1 host port.</p>
+<p>VIBE-3GH-A/B/C and 3GC-A modmes enumerate following serial to USB ports when proper USB drivers are present:</p>
+<pre><code>    /dev/ttyUSB0  /dev/ttyUSB1  /dev/ttyUSB2
+</code></pre>
+<ul>
+<li>ttyUSB0 is Data port &amp; AT commands for modem, use this for the WVDIAL or PPPd to establish data connection</li>
+<li>ttyUSB1 is the diagnostics port for the Firmware upgrade</li>
+<li>ttyUSB2 is the AT Commands port only. </li>
+</ul>
+<p><code>Note :</code>These /dev/ttyUSB ports are only created if proper drivers are present or when “modprobe usbserial” command is issued. Pre-flashed image includes all the USB drivers.</p>
+<p><code>Note :</code> Both ttyUSB0 and ttyUSB2 take the AT commands, but ttyUSB0 port is also a Data communications port so for all intended purposes of issuing AT commands use ttyUSB2 port(PCUI port).</p>
+<p><strong>Power Off Modem</strong></p>
+<p>The modem can be powered off by providing a low level pulse at ON/OFF pin for 3-4s when the module is On. It can be achieved by either using the push button switch S4 or GPIO45.</p>
+<pre><code>    cd /sys/class/gpio/
+    echo 45 &gt; export
+    cd gpio45
+    echo "high" &gt; direction
+    sleep 4
+    echo "low" &gt; direction
+    sleep 4
+    echo "high" &gt; direction
+</code></pre>
+<p>Modem can also be turned off by issuing following AT commands on port /dev/ttyUSB2 for 3GH-A/B/C type modems.</p>
+<pre><code>    AT+ZPWROFF
+</code></pre>
+<p><strong>Soft Resetting the Modem</strong></p>
+<p>Steps -</p>
+<ol>
+<li>Power Off the Modem.</li>
+<li>Wait for 1-2s at least.</li>
+<li>Power on the modem. </li>
+</ol>
+<p><strong>Hard Resetting the Modem</strong></p>
+<p>There might arise situations where modem does not seem to be responding to any commands issued on AT commands port or it cannot be turned on/off. In such scenarios, issue hard reset to the modem. It can be done by either toggling Switch S5 for at least 100ms or pulling GPIO44 low for 1s and then setting it high again.</p>
+<pre><code>    cd /sys/class/gpio/
+    cd gpio44
+    echo "low" &gt; direction
+    sleep 1
+    echo "high" &gt; direction
+</code></pre>
+<p><code>Note :</code> Please use hard reset conservatively. Soft reset should be preferred under most conditions. </p>
+<p><strong>3GH-D modems</strong></p>
+<p>For detailed instructions wrt 3GH-D type of modems 
+<a href="http://www.yantrr.com/wiki/ZTE_modem">please follow.</a></p>
+<h2 id="at-commands-manual">AT Commands Manual</h2>
+<p>The AT Command Manual for the 3GH-A/B/C and 3GC-A type Modules can be downloaded from 
+<a href="https://www.dropbox.com/s/g6dz78scv5s6638/SCV_WCDMA%20Module%20AT%20Command.pdf">WCDMA here</a></p>
+<p>The AT Command Manual for the 3GH-D Module is available on request. Contact Yantrr support. </p>
+              
+            </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+	  
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+<div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+      
+    </span>
+</div>
+
+</body>
+</html>
+
+<!--
+MkDocs version : 0.15.3
+Build Date UTC : 2016-07-20 11:22:46.342733
+-->
